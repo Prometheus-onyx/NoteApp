@@ -18,8 +18,6 @@ This guide explains how to deploy the React client (Vite) to Vercel and the Djan
 
 2. Install requirements and migrate (example shell):
 
-postgresql://steve:GotV3on6Df0w8pY0ljBM5L5g3X17SkjF@dpg-d93f2rvaqgkc73brm3d0-a/noteapp_db_3qs1
-
 ```bash
 cd server
 python -m venv venv
