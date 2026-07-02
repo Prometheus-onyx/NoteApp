@@ -11,3 +11,8 @@ python-dotenv
 pytz
 sqlparse
 tzdata
+
+# Production / deployment
+gunicorn
+whitenoise
+uvicorn

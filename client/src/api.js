@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { ACCESS_TOKEN } from './constants';
 
-//const apiUrl = window?.configs?.apiUrl ? window.configs.apiUrl : "http://127.0.0.1:8000";
+const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8000',//apiUrl ? apiUrl : import.meta.env.VITE_API_URL,
+    baseURL,
 });
 
 //console.log(apiUrl)
@@ -33,7 +33,7 @@ api.interceptors.response.use(
 
             if (refreshToken) {
                 try {
-                    const response = await axios.post('http://localhost:8000/api/token/refresh/', {
+                    const response = await api.post('/api/token/refresh/', {
                         refresh: refreshToken,
                     });
 
