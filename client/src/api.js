@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants';
+import { ACCESS_TOKEN } from './constants';
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -29,7 +29,7 @@ api.interceptors.response.use(
 
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-            const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+            const refreshToken = localStorage.getItem(refresh_token);
 
             if (refreshToken) {
                 try {
@@ -40,17 +40,18 @@ api.interceptors.response.use(
                     const newAccess = response.data.access;
                     const newRefresh = response.data.refresh;
 
-                    localStorage.setItem(ACCESS_TOKEN, newAccess);
+                    localStorage.setItem(access_token, newAccess);
                     if (newRefresh) {
-                        localStorage.setItem(REFRESH_TOKEN, newRefresh);
+                        localStorage.setItem(refresh_token, newRefresh);
                     }
 
                     originalRequest.headers.Authorization = `Bearer ${newAccess}`;
                     return api(originalRequest);
                 } catch (refreshError) {
-                    localStorage.removeItem(ACCESS_TOKEN);
-                    localStorage.removeItem(REFRESH_TOKEN);
+                    localStorage.removeItem(access_token);
+                    localStorage.removeItem(refresh_token);
                     window.location.href = "/login";
+                    alert("I cannot go anywhere!!!!!")
                     return Promise.reject(refreshError);
                 }
             }
