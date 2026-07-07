@@ -3,18 +3,17 @@ import api from "../api";
 import { useNavigate, Link } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import LoadingIndicator from "../components/LoadingIndicator";
-import NotFound from "../pages/NotFound"
 
-
-
- const Form = ({ route, method }) => {
+const Form = ({ route, method }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        setLoading(true)
+        setLoading(true);
+        setErrorMessage("");
         e.preventDefault();
         try {
             const res = await api.post(route, { username, password });
@@ -26,9 +25,15 @@ import NotFound from "../pages/NotFound"
                 navigate("/login");
             }
         } catch (error) {
-            <NotFound />
+            const msg =
+                error?.response?.data?.detail ||
+                error?.response?.data?.non_field_errors?.[0] ||
+                error?.response?.data?.username?.[0] ||
+                error?.response?.data?.password?.[0] ||
+                "Unable to submit. Please check your inputs.";
+            setErrorMessage(msg);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 
@@ -36,8 +41,11 @@ import NotFound from "../pages/NotFound"
         <div className="flex items-center justify-center min-h-screen bg-gray-900">
             <form onSubmit={handleSubmit} className="bg-zinc-900 p-8 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold mb-4">{method === "login" ? "Login" : "Register"}</h2>
+
                 <div className="mb-4">
-                    <label htmlFor="name" className="block text-gray-300">Name</label>
+                    <label htmlFor="name" className="block text-gray-300">
+                        Name
+                    </label>
                     <input
                         required
                         type="text"
@@ -48,8 +56,11 @@ import NotFound from "../pages/NotFound"
                         placeholder="Enter your name..."
                     />
                 </div>
+
                 <div className="mb-4">
-                    <label htmlFor="password" className="block text-gray-300">Password</label>
+                    <label htmlFor="password" className="block text-gray-300">
+                        Password
+                    </label>
                     <input
                         type="password"
                         id="password"
@@ -59,6 +70,13 @@ import NotFound from "../pages/NotFound"
                         placeholder="Enter your password..."
                     />
                 </div>
+
+                {errorMessage ? (
+                    <div className="mb-4 text-red-400" role="alert">
+                        {errorMessage}
+                    </div>
+                ) : null}
+
                 {loading && <LoadingIndicator />}
                 <button
                     type="submit"
@@ -66,11 +84,13 @@ import NotFound from "../pages/NotFound"
                 >
                     {method === "login" ? "Login" : "Register"}
                 </button>
+
                 <p className="mt-9 text-gray-300">
-                    {method === "login"
-                        ? "Don't have an account? "
-                        : "Already have an account? "}
-                    <Link to={method === "login" ? "/register" : "/login"} className="text-blue-500 hover:underline">
+                    {method === "login" ? "Don't have an account? " : "Already have an account? "}
+                    <Link
+                        to={method === "login" ? "/register" : "/login"}
+                        className="text-blue-500 hover:underline"
+                    >
                         {method === "login" ? "Register!" : "Login"}
                     </Link>
                 </p>
@@ -80,3 +100,4 @@ import NotFound from "../pages/NotFound"
 };
 
 export default Form;
+
