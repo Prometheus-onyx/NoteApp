@@ -22,7 +22,7 @@ api.interceptors.request.use(
     }
 );
 
-api.interceptors.response.use(
+/*api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
@@ -59,5 +59,5 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
+*/
 export default api;

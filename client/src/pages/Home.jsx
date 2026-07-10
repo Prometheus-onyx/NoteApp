@@ -8,6 +8,10 @@ export default function Home() {
     const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
 
+    useEffect(() => {
+        getNotes();
+    }, []);
+
     const getNotes = () => {
         api
             .get("/api/notes/")
@@ -49,10 +53,6 @@ export default function Home() {
             .catch((err) => alert(err));
         //getNotes();
     };
-
-    useEffect(() => {
-        getNotes();
-    }, []);
 
     return (
         <div className="py-24 text-center">
