@@ -3,9 +3,11 @@ import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
+import LoadingIndicator from "./LoadingIndicator";
 
 export default function ProtectedRoute({ children }) {
     const [isAuthorized, setIsAuthorized] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         auth().catch(() => setIsAuthorized(false))
@@ -46,7 +48,11 @@ export default function ProtectedRoute({ children }) {
     };
 
     if (isAuthorized === null) {
-        return <div>Loading...</div>; // Or any other loading indicator
+        return (
+        <>
+        {loading && <LoadingIndicator />}
+        </>
+    ); // Or any other loading indicator
     }
 
     return isAuthorized ? children : <Navigate to="/login" />;
